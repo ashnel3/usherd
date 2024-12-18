@@ -1,0 +1,57 @@
+{
+  "name": "usherd",
+  "version": "0.1.0",
+  "description": "Puppeteer script manager",
+  "main": "dist/bin.cjs",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./bin": {
+      "import": "./dist/bin.js",
+      "require": "./dist/bin.cjs"
+    }
+  },
+  "scripts": {
+    "start": "vite-node src/bin --",
+    "build": "vite build",
+    "lint": "eslint .",
+    "fmt": "prettier -cw .",
+    "fmt-check": "prettier -l .",
+    "test": "vitest --run",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ashnel3/usher.git"
+  },
+  "author": "ashnel3",
+  "license": "MIT",
+  "bugs": "https://github.com/ashnel3/usher/issues",
+  "homepage": "https://github.com/ashnel3/usher#readme",
+  "packageManager": "pnpm@9.14.4+sha512.c8180b3fbe4e4bca02c94234717896b5529740a6cbadf19fa78254270403ea2f27d4e1d46a08a0f56c89b63dc8ebfd3ee53326da720273794e6200fcf0d184ab",
+  "dependencies": {
+    "@supercharge/promise-pool": "^3.2.0",
+    "commander": "^12.1.0",
+    "puppeteer-core": "^23.10.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.13.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.4.2",
+    "rollup-plugin-node-externals": "^8.0.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1",
+    "vite": "^6.0.3",
+    "vite-node": "^2.1.8",
+    "vite-plugin-dts": "^4.3.0",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^2.1.8"
+  }
+}

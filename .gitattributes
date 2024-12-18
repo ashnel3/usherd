@@ -1,0 +1,22 @@
+* text=auto
+
+# Docs
+*.md                   text
+*.txt                  text
+
+# Config
+*.json                 text
+*.yaml                 text
+*.yml                  text
+
+# Shell
+.husky/**/*            text eol=lf
+*.sh                   text eol=lf
+*.bat                  text eol=crlf
+*.ps1                  text eol=crlf
+
+# Source
+*.cjs                  text
+*.mjs                  text
+*.js                   text
+*.ts                   text

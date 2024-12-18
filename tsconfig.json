@@ -1,0 +1,46 @@
+{
+  /* https://aka.ms/tsconfig */
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "ESNext",
+
+    /* Modules */
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "baseUrl": "./",
+    "rootDir": "src",
+    "paths": {
+      "$bin": ["./src/bin/index.ts"],
+      "$bin/*": ["./src/bin/*"],
+      "$lib": ["./src/lib/index.ts"],
+      "$lib/*": ["./src/lib/*"]
+    },
+    "allowArbitraryExtensions": true,
+    "resolveJsonModule": true,
+
+    /* JavaScript Support */
+    // "allowJs": true,
+    // "checkJs": true,
+    // "maxNodeModuleJsDepth": 1,
+
+    /* Emit */
+    "noEmit": true,
+
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Type Checking */
+    "strict": true,
+
+    /* Completeness */
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": false
+  },
+  "include": ["src/**/*"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}

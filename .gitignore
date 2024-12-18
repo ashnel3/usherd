@@ -1,3 +1,18 @@
+# Editor Files
+.vscode/
+
+# Output
+dist
+profile
+
+# Sqlite
+*.db
+*.sqlite
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
 # Logs
 logs
 *.log
