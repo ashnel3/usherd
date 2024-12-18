@@ -24,7 +24,7 @@ export const commands = Object.entries(
 
 /** usher commander program */
 export const program: Command = new Command(USHERD.NAME)
-  .option('-d, --debug', 'show debug information', false)
+  .option('--debug', 'show debug information', false)
   .option('-p, --profile <PATH>', 'browser profile directory', path.resolve('./profile'))
   .description(USHERD.DESCRIPTION)
   .version(`${USHERD.NAME} v${USHERD.VERSION}`, '-v, --version')
@@ -38,7 +38,12 @@ export const program: Command = new Command(USHERD.NAME)
 const ActionWrapper =
   (action: (ctx: IActionContext<any>, ...args: any) => Promise<void>) =>
   async (...args: any[]) => {
-    return action(await context(program, args.pop(), args.pop()), ...args)
+    const ctx = await context(program, args.pop(), args.pop())
+    try {
+      return await action(ctx, ...args)
+    } finally {
+      await ctx.database.destroy()
+    }
   }
 
 /**

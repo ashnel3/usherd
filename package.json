@@ -35,10 +35,13 @@
   "dependencies": {
     "@supercharge/promise-pool": "^3.2.0",
     "commander": "^12.1.0",
-    "puppeteer-core": "^23.10.4"
+    "knex": "^3.1.0",
+    "puppeteer-core": "^23.10.4",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.2",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
