@@ -62,5 +62,6 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['./src/test/spec/unit/*.test.ts'],
+    globalSetup: ['./src/test/setup.ts'],
   },
 })

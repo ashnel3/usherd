@@ -16,7 +16,7 @@ export const Database = async (filename: string) => {
     seeds: {
       seedSource: new ViteSeedSource(),
     },
-    useNullAsDefault: false,
+    useNullAsDefault: true,
   })
   // run seeders & migrations
   await Promise.resolve()
