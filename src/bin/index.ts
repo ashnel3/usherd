@@ -18,7 +18,6 @@ void (async () => {
 
 // exports
 
-export * from './config'
 export * from './context'
 export * from './program'
 export * as parser from './parser'
