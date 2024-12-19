@@ -18,8 +18,8 @@ export interface IGlobalOptions {
 }
 
 /** usher command modules */
-export const commands = Object.entries(
-  import.meta.glob<boolean, string, ICommandModule>('./command/*'),
+export const commands = Object.values(
+  import.meta.glob<true, string, ICommandModule>('./command/*', { eager: true }),
 )
 
 /** usher commander program */
@@ -51,19 +51,10 @@ const ActionWrapper =
  * @param extend - extra command modules
  * @returns        commander program
  */
-export const register = async (extend: typeof commands = []): Promise<Command> => {
-  await Promise.all(
-    commands.concat(extend).map(async ([path, mod]) => {
-      await mod()
-        .then(({ action, default: register }) => {
-          return register(program).action(ActionWrapper(action))
-        })
-        .catch((error) => {
-          console.error(`UNREACHABLE: failed to load command module "${path}"!`)
-          throw error
-        })
-    }),
-  )
+export const register = async (extend?: ICommandModule[]): Promise<Command> => {
+  commands.concat(extend ?? []).forEach(({ action, default: register }) => {
+    register(program).action(ActionWrapper(action))
+  })
   return program
 }
 
