@@ -7,7 +7,7 @@ import path from 'node:path'
  * @private
  */
 export interface ICommandModule {
-  action: (...args: any) => Promise<any>
+  action: (ctx: IActionContext<unknown>, ...args: any) => Promise<any>
   default: (command: Command) => Command
 }
 
@@ -36,7 +36,7 @@ export const program: Command = new Command(USHERD.NAME)
  * @returns      - action wrapper fn
  */
 const ActionWrapper =
-  (action: (ctx: IActionContext<any>, ...args: any) => Promise<void>) =>
+  (action: ICommandModule['action']) =>
   async (...args: any[]) => {
     const ctx = await context(program, args.pop(), args.pop())
     try {
