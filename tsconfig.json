@@ -13,7 +13,8 @@
       "$bin": ["./src/bin/index.ts"],
       "$bin/*": ["./src/bin/*"],
       "$lib": ["./src/lib/index.ts"],
-      "$lib/*": ["./src/lib/*"]
+      "$lib/*": ["./src/lib/*"],
+      "$test/*": ["./src/test/*"]
     },
     "allowArbitraryExtensions": true,
     "resolveJsonModule": true,

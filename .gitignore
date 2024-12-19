@@ -2,10 +2,7 @@
 .vscode/
 
 # Output
-dist
 profile
-
-# Sqlite
 *.db
 *.sqlite
 

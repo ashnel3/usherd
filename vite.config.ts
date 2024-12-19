@@ -31,12 +31,20 @@ export const defines = ({
       NAME,
       VERSION,
       PATH: {
+        PROFILE: 'profile',
         CONFIG: '.usherd.json',
         DATABASE: '.usherd.db',
       },
     },
   }
 }
+
+/** vite plugins */
+export const plugins: any[] = [
+  externals({ builtinsPrefix: 'add', deps: true }),
+  dts({ copyDtsFiles: true, insertTypesEntry: true }),
+  tsPaths(),
+]
 
 /** vite configuration */
 export default defineConfig({
@@ -50,13 +58,9 @@ export default defineConfig({
     },
   },
   define: defines(process.env),
-  plugins: [
-    dts({ copyDtsFiles: true, insertTypesEntry: true }),
-    externals({ builtinsPrefix: 'add' }),
-    tsPaths(),
-  ] as any,
+  plugins,
   test: {
     environment: 'node',
-    include: ['./src/test/*.test.ts'],
+    include: ['./src/test/spec/unit/*.test.ts'],
   },
 })

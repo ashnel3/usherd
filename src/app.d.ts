@@ -1,5 +1,5 @@
-/// <reference types="vitest" />
 /// <reference types="vite/client" />
+/// <reference types="vitest" />
 
 export interface IUsherMetadata {
   readonly DESCRIPTION: string
@@ -8,6 +8,7 @@ export interface IUsherMetadata {
   readonly NAME: string
   readonly VERSION: string
   readonly PATH: {
+    PROFILE: string
     CONFIG: string
     DATABASE: string
   }

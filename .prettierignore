@@ -1,7 +1,8 @@
 node_modules
 
-# output
+# Output
 dist
+profile
 
 # vite
 vite.config.js.timestamp-*

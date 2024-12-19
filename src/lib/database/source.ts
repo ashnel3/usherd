@@ -1,4 +1,4 @@
-import type { Knex } from "knex"
+import type { Knex } from 'knex'
 
 export class ViteSeedSource implements Knex.SeedSource<string> {
   readonly modules = import.meta.glob<false, string, Knex.Seed>('./seed/*')

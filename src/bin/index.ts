@@ -6,7 +6,7 @@ import { register } from './program'
  * @returns      commander program
  */
 export const main = async (args?: string[]) => {
-  return (await register()).parse(args)
+  return await register().parseAsync(args)
 }
 
 // main

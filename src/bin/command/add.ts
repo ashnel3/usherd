@@ -39,5 +39,5 @@ export default (program: Command) => {
     .argument('<PATH>', 'task script / module path')
     .argument('<NAME>', 'task name')
     .option('-d, --disable', 'disable running', false)
-    .option('-i, --interval <TIME>', 'task timeout', parser.time(), 15e3)
+    .option('-i, --interval <TIME>', 'task timeout', parser.int(), 15e3)
 }

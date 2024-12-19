@@ -11,9 +11,11 @@ export const action = async (
 ) => {
   const tasks = await database('task').select('*')
   const browser = await puppeteer.launch({
-    channel: config.browser.channel || config.browser.type === 'chrome' ? 'chrome' : undefined,
-    browser: config.browser.type ?? 'chrome',
-    executablePath: config.browser.path,
+    args: config.browser?.arguments,
+    browser: config.browser?.type ?? 'chrome',
+    channel: config.browser?.channel || config?.browser?.type === 'chrome' ? 'chrome' : undefined,
+    executablePath: config.browser?.executablePath,
+    headless: config.browser?.headless,
     userDataDir: opts.profile,
   })
   console.log(tasks)

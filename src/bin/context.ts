@@ -1,31 +1,45 @@
-import Database from '$lib/database'
+import connect from '$lib/database'
 import fs from 'node:fs/promises'
-import path from 'node:path'
+import { join, resolve } from 'node:path'
 
 import type { Command, OptionValues } from 'commander'
 import type { IGlobalOptions } from './program'
 import type { Knex } from 'knex'
 
 /** command action context */
-export interface IActionContext<T> {
-  readonly program: Command
+export interface IActionContext<T> extends IUsherProfile {
   readonly command?: Command
-  readonly config: IUsherConfig
-  readonly database: Knex
+  readonly program: Command
   readonly opts: T & IGlobalOptions
+
+  readonly destroy: () => Promise<void>
 }
 
-/** usher configuration */
+/** usher configuration type */
+export type UsherConfig = Partial<IUsherConfig>
+
+/** usher configuration interface */
 export interface IUsherConfig {
-  browser: {
+  readonly browser: {
+    arguments?: string[]
+    headless?: boolean
     channel?: string
-    path?: string
+    executablePath?: string
     type: 'chrome' | 'firefox'
   }
 }
 
+/** usher browser profile configuration */
+export interface IUsherProfile {
+  readonly config: Partial<IUsherConfig>
+  readonly database: Knex
+  readonly path: {
+    profile: string
+  }
+}
+
 /** usher default configuration */
-export const DEFAULTS: IUsherConfig = {
+export const CONFIG: IUsherConfig = {
   browser: {
     type: 'chrome',
   },
@@ -42,7 +56,7 @@ export const readConfig = async (filepath: string): Promise<IUsherConfig> => {
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
       // write defaults
-      return await writeConfig(filepath, DEFAULTS)
+      return await writeConfig(filepath, CONFIG)
     }
     throw error
   }
@@ -55,8 +69,35 @@ export const readConfig = async (filepath: string): Promise<IUsherConfig> => {
  * @returns          config data
  */
 export const writeConfig = async (filepath: string, data: IUsherConfig): Promise<IUsherConfig> => {
-  await fs.writeFile(filepath, JSON.stringify(data, null, 4))
+  await fs.writeFile(filepath, JSON.stringify(data, null, 2))
   return data
+}
+
+/**
+ * load profile configuration
+ * @param dir - profile dir path
+ * @returns     config & database
+ */
+export const profile = async (dir: string): Promise<IUsherProfile> => {
+  return await fs
+    .mkdir(dir, { recursive: true })
+    .then(async () => {
+      const [database, config] = await Promise.all([
+        connect(join(dir, USHERD.PATH.DATABASE)),
+        readConfig(join(dir, USHERD.PATH.CONFIG)),
+      ])
+      return {
+        database,
+        config,
+        path: {
+          profile: dir,
+        },
+      }
+    })
+    .catch((error) => {
+      console.error(`ERROR: failed to read profile "${dir}"!\n`)
+      throw error
+    })
 }
 
 /**
@@ -65,34 +106,31 @@ export const writeConfig = async (filepath: string, data: IUsherConfig): Promise
  * @param program - commander program
  * @param command - commander sub command
  * @param opts    - commander options
- * @returns       - action context
+ * @param dir     - profile directory override
+ * @returns         action context
  */
 export const context = async (
   program: Command,
   command?: Command,
   opts: OptionValues = {},
+  dir?: string,
 ): Promise<IActionContext<any>> => {
   const globals = program.opts<IGlobalOptions>()
-  const [database, config] = await fs
-    .mkdir(globals.profile, { recursive: true })
-    .then(
-      async () =>
-        await Promise.all([
-          Database(path.join(globals.profile, USHERD.PATH.DATABASE)),
-          readConfig(path.join(globals.profile, USHERD.PATH.CONFIG)),
-        ]),
-    )
-    .catch((error) => {
-      console.error(`ERROR: failed to read profile "${globals.profile}"!\n`)
-      throw error
-    })
+  const profilePath = resolve(dir ?? globals.profile)
+  const { config, database, path } = await profile(profilePath)
   return {
-    command,
     config,
     database,
+    command,
     program,
+    // context paths
+    path,
     // merge local & global options
     opts: Object.assign(globals, opts),
+    // destroy context
+    destroy: async () => {
+      await database.destroy()
+    },
   }
 }
 

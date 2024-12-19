@@ -6,14 +6,14 @@ import path from 'node:path'
  * usher command module exports
  * @private
  */
-interface ICommandModule {
-  action: () => Promise<void>
+export interface ICommandModule {
+  action: (...args: any) => Promise<any>
   default: (command: Command) => Command
 }
 
 /** usher global command-line options */
 export interface IGlobalOptions {
-  debug: boolean
+  debug?: boolean
   profile: string
 }
 
@@ -25,7 +25,7 @@ export const commands = Object.values(
 /** usher commander program */
 export const program: Command = new Command(USHERD.NAME)
   .option('--debug', 'show debug information', false)
-  .option('-p, --profile <PATH>', 'browser profile directory', path.resolve('./profile'))
+  .option('-p, --profile <PATH>', 'browser profile directory', path.resolve(USHERD.PATH.PROFILE))
   .description(USHERD.DESCRIPTION)
   .version(`${USHERD.NAME} v${USHERD.VERSION}`, '-v, --version')
 
@@ -42,18 +42,20 @@ const ActionWrapper =
     try {
       return await action(ctx, ...args)
     } finally {
-      await ctx.database.destroy()
+      await ctx.destroy()
     }
   }
 
 /**
  * register cli commands
  * @param extend - extra command modules
+ * @param base   - base commands
  * @returns        commander program
  */
-export const register = async (extend?: ICommandModule[]): Promise<Command> => {
-  commands.concat(extend ?? []).forEach(({ action, default: register }) => {
-    register(program).action(ActionWrapper(action))
+export const register = (extend?: ICommandModule[], base = commands): Command => {
+  base.concat(extend ?? []).forEach(({ action, default: registerCommand }) => {
+    // TODO: expect registerCommand to create command chain
+    registerCommand(program).action(ActionWrapper(action))
   })
   return program
 }
